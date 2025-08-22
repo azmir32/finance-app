@@ -253,7 +253,16 @@ export async function generateAIAnswer(
     Expense Data:
     ${JSON.stringify(expensesSummary, null, 2)}
 
-    Provide a helpful, detailed answer with specific insights from the data.`;
+    Provide a helpful, detailed answer with specific insights from the data. Use markdown formatting to structure your response:
+
+    - Use **bold text** for important numbers and key points
+    - Use ### for main section headings (e.g., "### Analysis Summary")
+    - Use #### for subsection headings (e.g., "#### Spending Patterns")
+    - Use bullet points (- or *) for lists
+    - Use numbered lists (1. 2. 3.) for step-by-step recommendations
+    - Use *italic text* for emphasis on important concepts
+
+    Structure your response with clear headings and organized information for better readability.`;
 
     console.log('🤖 generateAIAnswer: Sending question to AI API...');
 
@@ -262,7 +271,7 @@ export async function generateAIAnswer(
       messages: [
         {
           role: 'system',
-          content: 'You are a financial advisor AI that helps users understand their spending patterns. Provide detailed, actionable insights.',
+          content: 'You are a financial advisor AI that helps users understand their spending patterns. Provide detailed, actionable insights using proper markdown formatting for better readability.',
         },
         {
           role: 'user',
@@ -270,7 +279,7 @@ export async function generateAIAnswer(
         },
       ],
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 800,
     });
 
     const response = completion.choices[0].message.content;
