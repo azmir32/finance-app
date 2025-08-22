@@ -10,6 +10,7 @@ A modern expense tracking application with AI-powered insights.
 - 📊 **Data Visualization** - Charts and analytics for spending patterns
 - 🌙 **Dark/Light Theme** - Theme toggle functionality
 - 📱 **Responsive Design** - Mobile-optimized interface
+- 📱 **Progressive Web App (PWA)** - Installable app with offline support and push notifications
 
 ## Tech Stack
 
@@ -19,6 +20,7 @@ A modern expense tracking application with AI-powered insights.
 - **Database**: PostgreSQL with Prisma ORM
 - **AI**: OpenAI API
 - **Charts**: Chart.js with react-chartjs-2
+- **PWA**: Service Worker, Web App Manifest, Push Notifications
 - **Testing**: Jest, React Testing Library, Playwright
 
 ## Getting Started
@@ -147,6 +149,40 @@ npm run build
 npm start
 ```
 
+## Progressive Web App (PWA)
+
+This application is built as a Progressive Web App with the following features:
+
+### PWA Features
+- **Installable**: Can be installed on desktop and mobile devices
+- **Offline Support**: Works offline with cached resources
+- **Push Notifications**: Real-time notifications for expense alerts and insights
+- **App-like Experience**: Standalone window with native app feel
+
+### PWA Setup
+
+1. **Icons**: Add PWA icons to `/public/icons/` directory (see `/public/icons/placeholder.txt`)
+2. **Screenshots**: Add app screenshots to `/public/screenshots/` directory
+3. **VAPID Keys**: For push notifications, add these environment variables:
+   ```env
+   VAPID_EMAIL="your-email@example.com"
+   VAPID_PRIVATE_KEY="your-vapid-private-key"
+   NEXT_PUBLIC_VAPID_PUBLIC_KEY="your-vapid-public-key"
+   ```
+
+### Testing PWA
+
+1. **Browser Testing**: Use the PWA test script in browser console
+2. **Installation**: Look for install prompt in browser address bar
+3. **Offline Testing**: Disconnect internet and test functionality
+4. **Push Notifications**: Use the PWA components to test notifications
+
+### PWA Files
+- `app/manifest.ts` - Web App Manifest
+- `public/sw.js` - Service Worker
+- `app/actions.ts` - Push notification actions
+- `app/components/PwaComponents.tsx` - PWA UI components
+
 ## Environment Variables
 
 | Variable | Description | Required |
@@ -155,6 +191,9 @@ npm start
 | `OPENAI_API_KEY` | OpenAI API key for AI features | Yes |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key | Yes |
 | `CLERK_SECRET_KEY` | Clerk secret key | Yes |
+| `VAPID_EMAIL` | Email for VAPID push notifications | No |
+| `VAPID_PRIVATE_KEY` | VAPID private key for push notifications | No |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | VAPID public key for push notifications | No |
 
 ## Contributing
 

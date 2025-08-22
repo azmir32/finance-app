@@ -23,8 +23,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Record Record[]
-
-  
+  pushSubscriptions PushSubscription[]
 }
 
 model Record {
@@ -38,4 +37,16 @@ model Record {
   createdAt DateTime @default(now())
   @@index([userId])
 
+}
+
+model PushSubscription {
+  id       String   @id @default(uuid())
+  endpoint String   @unique
+  p256dh   String
+  auth     String
+  userId   String
+  user     User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
 }
