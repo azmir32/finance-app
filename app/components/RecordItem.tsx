@@ -32,54 +32,53 @@ const RecordItem = ({ record }: { record: Record }) => {
       console.log(`🗑️ RecordItem: Starting deletion of record ${recordId}...`);
       console.log(`📊 RecordItem: Record details - Amount: $${record.amount}, Category: ${record.category}, Text: "${record.text}"`);
       
-      setIsLoading(true); // Show loading spinner
-      setError(null); // Clear any previous errors
+      setIsLoading(true);
+      setError(null);
 
-      const result = await deleteRecord(recordId); // Perform delete operation
+      const result = await deleteRecord(recordId);
       
       if (result.error) {
         console.error('❌ RecordItem: Delete operation failed:', result.error);
         setError(result.error);
       } else {
         console.log('✅ RecordItem: Record deleted successfully');
-        // The page will revalidate automatically due to revalidatePath in the server action
       }
     } catch (error) {
       console.error('❌ RecordItem: Unexpected error during record deletion:', error);
       setError('Failed to delete record. Please try again.');
     } finally {
-      setIsLoading(false); // Hide loading spinner
+      setIsLoading(false);
     }
   };
 
   // Determine border color based on expense amount
   const getBorderColor = (amount: number) => {
-    if (amount > 100) return 'border-red-500'; // High expense
-    if (amount > 50) return 'border-yellow-500'; // Medium expense
-    return 'border-green-500'; // Low expense
+    if (amount > 100) return 'border-red-500';
+    if (amount > 50) return 'border-yellow-500';
+    return 'border-green-500';
   };
 
   return (
-    <li
-      className={`bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100/50 dark:border-gray-600/50 border-l-4 ${getBorderColor(
+    <div
+      className={`bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-gray-100/50 dark:border-gray-600/50 border-l-4 ${getBorderColor(
         record?.amount
-      )} hover:bg-white/80 dark:hover:bg-gray-700/80 relative min-h-[120px] sm:min-h-[140px] flex flex-col justify-between overflow-visible group`}
+      )} hover:bg-white/90 dark:hover:bg-gray-700/90 hover:shadow-xl relative min-h-[140px] flex flex-col justify-between overflow-visible group transition-all duration-300`}
     >
-      {/* Delete button positioned absolutely in top-right corner */}
+      {/* Delete button */}
       <button
         onClick={() => handleDeleteRecord(record.id)}
-        className={`absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center shadow-lg hover:shadow-xl border-2 border-white dark:border-gray-700 backdrop-blur-sm transform hover:scale-110 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 ${
+        className={`absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-lg hover:shadow-xl border-2 border-white dark:border-gray-700 backdrop-blur-sm transform hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-200 ${
           isLoading ? 'cursor-not-allowed scale-100' : ''
         }`}
         aria-label='Delete record'
-        disabled={isLoading} // Disable button while loading
+        disabled={isLoading}
         title='Delete expense record'
       >
         {isLoading ? (
           <div className='w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin'></div>
         ) : (
           <svg
-            className='w-3 h-3 sm:w-4 sm:h-4'
+            className='w-4 h-4'
             fill='none'
             stroke='currentColor'
             viewBox='0 0 24 24'
@@ -105,20 +104,20 @@ const RecordItem = ({ record }: { record: Record }) => {
         </div>
       )}
 
-      {/* Content area with proper spacing */}
+      {/* Content area */}
       <div className='flex-1 flex flex-col justify-between'>
-        <div className='space-y-2 sm:space-y-3'>
+        <div className='space-y-3'>
           <div className='flex items-center justify-between'>
-            <span className='text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide uppercase'>
+            <span className='text-sm font-medium text-gray-500 dark:text-gray-400'>
               {new Date(record?.date).toLocaleDateString()}
             </span>
-            <span className='text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100'>
+            <span className='text-xl font-bold text-gray-900 dark:text-gray-100'>
               ${record?.amount.toFixed(2)}
             </span>
           </div>
 
           <div className='flex items-center gap-2'>
-            <span className='text-base sm:text-lg'>
+            <span className='text-lg'>
               {getCategoryEmoji(record?.category)}
             </span>
             <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
@@ -127,11 +126,11 @@ const RecordItem = ({ record }: { record: Record }) => {
           </div>
         </div>
 
-        <div className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-2'>
+        <div className='text-sm text-gray-600 dark:text-gray-400 mt-3 leading-relaxed'>
           {record?.text}
         </div>
       </div>
-    </li>
+    </div>
   );
 };
 

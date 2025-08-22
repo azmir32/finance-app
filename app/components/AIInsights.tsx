@@ -38,10 +38,16 @@ const AIInsights = () => {
         {
           id: 'fallback-1',
           type: 'info',
-          title: 'AI Temporarily Unavailable',
-          message:
-            "We're working to restore AI insights. Please check back soon.",
-          action: 'Try again later',
+          title: 'AI Analysis Unavailable',
+          message: 'Unable to analyze your expenses at the moment. Please try again later.',
+          action: 'Retry analysis',
+        },
+        {
+          id: 'fallback-2',
+          type: 'tip',
+          title: 'Manual Tracking',
+          message: 'Continue tracking your expenses manually. We\'ll analyze them when the AI is available.',
+          action: 'Keep tracking',
         },
       ]);
     } finally {
@@ -127,7 +133,7 @@ const AIInsights = () => {
       case 'tip':
         return 'border-l-emerald-500 bg-emerald-50 dark:bg-emerald-900/20';
       case 'info':
-        return 'border-l-emerald-500 bg-emerald-50 dark:bg-emerald-900/20';
+        return 'border-l-blue-500 bg-blue-50 dark:bg-blue-900/20';
       default:
         return 'border-l-gray-500 bg-gray-50 dark:bg-gray-800/50';
     }
@@ -142,7 +148,7 @@ const AIInsights = () => {
       case 'tip':
         return 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200';
       case 'info':
-        return 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200';
+        return 'text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200';
       default:
         return 'text-gray-700 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200';
     }
@@ -166,37 +172,37 @@ const AIInsights = () => {
 
   if (isLoading) {
     return (
-      <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50'>
-        <div className='flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6'>
-          <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg'>
-            <span className='text-white text-sm sm:text-lg'>🤖</span>
+      <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50'>
+        <div className='flex items-center gap-3 mb-6'>
+          <div className='w-10 h-10 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg'>
+            <span className='text-white text-lg'>🤖</span>
           </div>
           <div className='flex-1'>
-            <h3 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100'>
+            <h3 className='text-xl font-bold text-gray-900 dark:text-gray-100'>
               AI Insights
             </h3>
-            <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+            <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
               Analyzing your spending patterns
             </p>
           </div>
-          <div className='flex items-center gap-1 sm:gap-2'>
-            <div className='w-5 h-5 sm:w-6 sm:h-6 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin'></div>
-            <span className='text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium hidden sm:block'>
+          <div className='flex items-center gap-2'>
+            <div className='w-6 h-6 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin'></div>
+            <span className='text-sm text-emerald-600 dark:text-emerald-400 font-medium'>
               Analyzing...
             </span>
           </div>
         </div>
 
-        <div className='space-y-3 sm:space-y-4'>
-          {[1, 2, 3].map((i) => (
+        <div className='space-y-4'>
+          {[1, 2].map((i) => (
             <div
               key={i}
-              className='animate-pulse bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-700 dark:to-gray-800 p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-gray-600'
+              className='animate-pulse bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-700 dark:to-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-600'
             >
-              <div className='flex items-start gap-3 sm:gap-4'>
-                <div className='w-6 h-6 sm:w-8 sm:h-8 bg-gray-200 dark:bg-gray-600 rounded-lg'></div>
-                <div className='flex-1 space-y-2'>
-                  <div className='h-3 bg-gray-200 dark:bg-gray-600 rounded-lg w-3/4'></div>
+              <div className='flex items-start gap-4'>
+                <div className='w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-lg'></div>
+                <div className='flex-1 space-y-3'>
+                  <div className='h-4 bg-gray-200 dark:bg-gray-600 rounded-lg w-3/4'></div>
                   <div className='h-3 bg-gray-200 dark:bg-gray-600 rounded-lg w-full'></div>
                   <div className='h-3 bg-gray-200 dark:bg-gray-600 rounded-lg w-2/3'></div>
                 </div>
@@ -205,10 +211,10 @@ const AIInsights = () => {
           ))}
         </div>
 
-        <div className='mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-700 text-center'>
+        <div className='mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-center'>
           <div className='flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400'>
             <div className='w-1.5 h-1.5 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse'></div>
-            <span className='text-xs sm:text-sm'>
+            <span className='text-sm'>
               AI is analyzing your financial patterns...
             </span>
           </div>
@@ -218,34 +224,29 @@ const AIInsights = () => {
   }
 
   return (
-    <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl'>
-      <div className='flex items-center justify-between mb-4 sm:mb-6'>
-        <div className='flex items-center gap-2 sm:gap-3'>
-          <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg'>
-            <span className='text-white text-sm sm:text-lg'>🤖</span>
+    <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl transition-all duration-300'>
+      <div className='flex items-center justify-between mb-6'>
+        <div className='flex items-center gap-3'>
+          <div className='w-10 h-10 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg'>
+            <span className='text-white text-lg'>🤖</span>
           </div>
           <div>
-            <h3 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100'>
+            <h3 className='text-xl font-bold text-gray-900 dark:text-gray-100'>
               AI Insights
             </h3>
-            <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+            <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
               AI financial analysis
             </p>
           </div>
         </div>
-        <div className='flex items-center gap-2 sm:gap-3'>
-          <div className='inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded-full text-xs font-medium'>
+        <div className='flex items-center gap-3'>
+          <div className='inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-full text-sm font-medium'>
             <span className='w-1.5 h-1.5 bg-emerald-500 dark:bg-emerald-400 rounded-full'></span>
-            <span className='hidden sm:inline'>{formatLastUpdated()}</span>
-            <span className='sm:hidden'>
-              {formatLastUpdated().includes('ago')
-                ? formatLastUpdated().replace(' ago', '')
-                : formatLastUpdated()}
-            </span>
+            <span>{formatLastUpdated()}</span>
           </div>
           <button
             onClick={loadInsights}
-            className='w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 hover:from-emerald-700 hover:via-green-600 hover:to-teal-600 text-white rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200'
+            className='w-8 h-8 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 hover:from-emerald-700 hover:via-green-600 hover:to-teal-600 text-white rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200'
             disabled={isLoading}
           >
             <span className='text-sm'>🔄</span>
@@ -253,7 +254,7 @@ const AIInsights = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         {insights.map((insight) => {
           const currentAnswer = aiAnswers.find(
             (a) => a.insightId === insight.id
@@ -262,30 +263,30 @@ const AIInsights = () => {
           return (
             <div
               key={insight.id}
-              className={`relative overflow-hidden rounded-xl p-3 sm:p-4 border-l-4 hover:shadow-lg transition-all duration-200 ${getInsightColors(
+              className={`relative overflow-hidden rounded-xl p-4 border-l-4 hover:shadow-lg transition-all duration-200 ${getInsightColors(
                 insight.type
               )}`}
             >
               <div className='flex items-start justify-between'>
                 <div className='flex-1'>
-                  <div className='flex items-center gap-2 sm:gap-3 mb-2'>
+                  <div className='flex items-center gap-3 mb-3'>
                     <div
-                      className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                         insight.type === 'warning'
                           ? 'bg-yellow-100 dark:bg-yellow-900/50'
                           : insight.type === 'success'
                           ? 'bg-green-100 dark:bg-green-900/50'
                           : insight.type === 'tip'
                           ? 'bg-emerald-100 dark:bg-emerald-900/50'
-                          : 'bg-emerald-100 dark:bg-emerald-900/50'
+                          : 'bg-blue-100 dark:bg-blue-900/50'
                       }`}
                     >
-                      <span className='text-sm sm:text-lg'>
+                      <span className='text-lg'>
                         {getInsightIcon(insight.type)}
                       </span>
                     </div>
                     <div className='flex-1'>
-                      <h4 className='font-bold text-gray-900 dark:text-gray-100 text-sm mb-0.5'>
+                      <h4 className='font-bold text-gray-900 dark:text-gray-100 mb-1'>
                         {insight.title}
                       </h4>
                       {insight.confidence && insight.confidence < 0.8 && (
@@ -295,14 +296,14 @@ const AIInsights = () => {
                       )}
                     </div>
                   </div>
-                  <p className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed mb-3'>
+                  <p className='text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-4'>
                     {insight.message}
                   </p>
                   {insight.action && (
                     <div className='text-left'>
                       <span
                         onClick={() => handleActionClick(insight)}
-                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium text-xs cursor-pointer transition-all duration-200 ${getButtonColors(
+                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 ${getButtonColors(
                           insight.type
                         )} hover:bg-white/50 dark:hover:bg-gray-700/50 ${
                           currentAnswer ? 'bg-white/50 dark:bg-gray-700/50' : ''
@@ -322,23 +323,23 @@ const AIInsights = () => {
 
                   {/* AI Answer Display */}
                   {currentAnswer && (
-                    <div className='mt-3 p-3 bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-600'>
-                      <div className='flex items-start gap-2'>
-                        <div className='w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-lg flex items-center justify-center flex-shrink-0'>
+                    <div className='mt-4 p-3 bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-gray-600'>
+                      <div className='flex items-start gap-3'>
+                        <div className='w-6 h-6 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-lg flex items-center justify-center flex-shrink-0'>
                           <span className='text-white text-xs'>🤖</span>
                         </div>
                         <div className='flex-1'>
-                          <h5 className='font-semibold text-gray-900 dark:text-gray-100 text-xs mb-1'>
+                          <h5 className='font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2'>
                             AI Answer:
                           </h5>
                           {currentAnswer.isLoading ? (
-                            <div className='space-y-1'>
+                            <div className='space-y-2'>
                               <div className='animate-pulse bg-gray-200 dark:bg-gray-600 h-2 rounded-lg w-full'></div>
                               <div className='animate-pulse bg-gray-200 dark:bg-gray-600 h-2 rounded-lg w-3/4'></div>
                               <div className='animate-pulse bg-gray-200 dark:bg-gray-600 h-2 rounded-lg w-1/2'></div>
                             </div>
                           ) : (
-                            <p className='text-gray-700 dark:text-gray-300 text-xs leading-relaxed'>
+                            <p className='text-gray-700 dark:text-gray-300 text-sm leading-relaxed'>
                               {currentAnswer.answer}
                             </p>
                           )}
@@ -353,17 +354,17 @@ const AIInsights = () => {
         })}
       </div>
 
-      <div className='mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-700'>
-        <div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0'>
+      <div className='mt-6 pt-4 border-t border-gray-100 dark:border-gray-700'>
+        <div className='flex flex-col sm:flex-row items-center justify-between gap-4'>
           <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
-            <div className='w-5 h-5 sm:w-6 sm:h-6 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center'>
+            <div className='w-6 h-6 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center'>
               <span className='text-sm'>🧠</span>
             </div>
-            <span className='font-medium text-xs'>Powered by AI analysis</span>
+            <span className='font-medium text-sm'>Powered by AI analysis</span>
           </div>
           <button
             onClick={loadInsights}
-            className='px-3 py-1.5 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 hover:from-emerald-700 hover:via-green-600 hover:to-teal-600 text-white rounded-lg font-medium text-xs shadow-lg hover:shadow-xl transition-all duration-200'
+            className='px-4 py-2 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 hover:from-emerald-700 hover:via-green-600 hover:to-teal-600 text-white rounded-lg font-medium text-sm shadow-lg hover:shadow-xl transition-all duration-200'
           >
             <span className='sm:hidden'>Refresh</span>
             <span className='hidden sm:inline'>Refresh Insights →</span>
