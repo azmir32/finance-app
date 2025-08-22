@@ -36,6 +36,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+      <meta name="apple-mobile-web-app-title" content="Expense Tracker" />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

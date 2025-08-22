@@ -33,10 +33,21 @@ function PushNotificationManager() {
   const [status, setStatus] = useState<string>('')
  
   useEffect(() => {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
+    // Check for basic service worker support
+    if ('serviceWorker' in navigator) {
       setIsSupported(true)
       registerServiceWorker()
     }
+    
+    // Log browser capabilities for debugging
+    console.log('PWA Support Check:', {
+      serviceWorker: 'serviceWorker' in navigator,
+      pushManager: 'PushManager' in window,
+      notifications: 'Notification' in window,
+      userAgent: navigator.userAgent,
+      isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent),
+      isSafari: /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+    })
   }, [])
  
   async function registerServiceWorker() {
@@ -170,11 +181,16 @@ function PushNotificationManager() {
     return (
       <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
         <p className="text-yellow-800 dark:text-yellow-200">
-          Push notifications are not supported in this browser.
+          Service Worker is not supported in this browser. PWA features may be limited.
         </p>
       </div>
     )
   }
+
+  // Check for push notification support separately
+  const isPushSupported = 'serviceWorker' in navigator && 'PushManager' in window
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
  
   return (
     <div className="space-y-6">
@@ -213,6 +229,14 @@ function PushNotificationManager() {
               {isLoading ? 'Unsubscribing...' : 'Unsubscribe'}
             </button>
           </div>
+          
+          {isIOS && isSafari && (
+            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <p className="text-blue-800 dark:text-blue-200 text-xs">
+                💡 iOS Safari: Install the app for the best push notification experience
+              </p>
+            </div>
+          )}
 
           <div className="space-y-3">
             <h4 className="font-medium text-gray-900 dark:text-white">Test Notifications</h4>
@@ -268,16 +292,34 @@ function PushNotificationManager() {
         </div>
       ) : (
         <div className="space-y-4">
+          {!isPushSupported && (
+            <div className="p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
+              <p className="text-orange-800 dark:text-orange-200 text-sm">
+                {isIOS && isSafari 
+                  ? "Push notifications have limited support in iOS Safari. Try installing the app for better experience."
+                  : "Push notifications are not supported in this browser."
+                }
+              </p>
+            </div>
+          )}
+          
           <p className="text-gray-700 dark:text-gray-300">
             Get notified about your expenses, budget alerts, and financial insights.
           </p>
-          <button 
-            onClick={subscribeToPush}
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors"
-          >
-            {isLoading ? 'Subscribing...' : 'Subscribe to Notifications'}
-          </button>
+          
+          {isPushSupported ? (
+            <button 
+              onClick={subscribeToPush}
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors"
+            >
+              {isLoading ? 'Subscribing...' : 'Subscribe to Notifications'}
+            </button>
+          ) : (
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Install the app to access all PWA features.
+            </div>
+          )}
         </div>
       )}
     </div>
