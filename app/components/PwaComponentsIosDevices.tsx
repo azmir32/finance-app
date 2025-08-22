@@ -4,13 +4,13 @@ import { PushNotificationManager } from './PwaComponents'
 function InstallPrompt() {
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null)
   const [showInstallPrompt, setShowInstallPrompt] = useState(false)
  
   useEffect(() => {
     // Check if running on iOS
     setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as unknown as { MSStream: unknown }).MSStream
     )
  
     // Check if already installed as PWA
@@ -23,17 +23,18 @@ function InstallPrompt() {
       setShowInstallPrompt(true)
     }
     
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener)
     
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener)
     }
   }, [])
  
   const handleInstallClick = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
+      const promptEvent = deferredPrompt as unknown as { prompt(): Promise<void>; userChoice: Promise<{ outcome: string }> }
+      promptEvent.prompt()
+      const { outcome } = await promptEvent.userChoice
       if (outcome === 'accepted') {
         setDeferredPrompt(null)
         setShowInstallPrompt(false)
@@ -80,7 +81,7 @@ function InstallPrompt() {
           <p className="text-sm text-blue-800 dark:text-blue-200">
             <strong>iOS Instructions:</strong> Tap the share button 
             <span className="mx-1">⎋</span>
-            and select "Add to Home Screen"
+            and select &quot;Add to Home Screen&quot;
             <span className="mx-1">➕</span>
           </p>
         </div>

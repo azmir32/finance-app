@@ -38,7 +38,7 @@ export interface NotificationData {
     title: string
     icon?: string
   }>
-  customData?: Record<string, any>
+  customData?: Record<string, unknown>
 }
 
 export async function subscribeUser(subscription: PushSubscription) {
@@ -48,26 +48,32 @@ export async function subscribeUser(subscription: PushSubscription) {
       throw new Error('User not authenticated')
     }
 
-    // Store subscription in database (you'll need to add this to your Prisma schema)
-    // For now, we'll use a simple approach with localStorage fallback
-    const subscriptionData = {
-      endpoint: subscription.endpoint,
-      keys: {
-        p256dh: subscription.toJSON().keys?.p256dh,
-        auth: subscription.toJSON().keys?.auth
-      },
-      userId: user.id
-    }
+    // Check if user already has a subscription
+    const existingSubscription = await db.pushSubscription.findFirst({
+      where: { userId: user.id }
+    })
 
-    // TODO: Add to database when you create the subscription table
-    // await db.pushSubscription.create({
-    //   data: {
-    //     endpoint: subscription.endpoint,
-    //     p256dh: subscription.toJSON().keys?.p256dh,
-    //     auth: subscription.toJSON().keys?.auth,
-    //     userId: user.id
-    //   }
-    // })
+    if (existingSubscription) {
+      // Update existing subscription
+      await db.pushSubscription.update({
+        where: { id: existingSubscription.id },
+        data: {
+          endpoint: subscription.endpoint,
+          p256dh: subscription.toJSON().keys?.p256dh || '',
+          auth: subscription.toJSON().keys?.auth || '',
+        }
+      })
+    } else {
+      // Create new subscription
+      await db.pushSubscription.create({
+        data: {
+          endpoint: subscription.endpoint,
+          p256dh: subscription.toJSON().keys?.p256dh || '',
+          auth: subscription.toJSON().keys?.auth || '',
+          userId: user.id
+        }
+      })
+    }
 
     console.log('User subscribed to push notifications:', user.id)
     return { success: true, userId: user.id }
@@ -84,10 +90,10 @@ export async function unsubscribeUser() {
       throw new Error('User not authenticated')
     }
 
-    // TODO: Remove from database when you create the subscription table
-    // await db.pushSubscription.deleteMany({
-    //   where: { userId: user.id }
-    // })
+    // Remove subscription from database
+    await db.pushSubscription.deleteMany({
+      where: { userId: user.id }
+    })
 
     console.log('User unsubscribed from push notifications:', user.id)
     return { success: true, userId: user.id }
@@ -104,22 +110,18 @@ export async function sendNotification(notificationData: NotificationData) {
       throw new Error('User not authenticated')
     }
 
-    // TODO: Get subscription from database
-    // const subscription = await db.pushSubscription.findFirst({
-    //   where: { userId: user.id }
-    // })
+    // Get subscription from database
+    const subscription = await db.pushSubscription.findFirst({
+      where: { userId: user.id }
+    })
 
-    // For now, we'll use a mock subscription (you'll need to implement proper storage)
-    const mockSubscription = {
-      endpoint: 'mock-endpoint',
-      keys: {
-        p256dh: 'mock-p256dh',
-        auth: 'mock-auth'
-      }
+    if (!subscription) {
+      throw new Error('No subscription available for user')
     }
 
-    if (!mockSubscription) {
-      throw new Error('No subscription available for user')
+    // Validate subscription data
+    if (!subscription.endpoint || !subscription.p256dh || !subscription.auth) {
+      throw new Error('Invalid subscription data')
     }
 
     // Create notification payload
@@ -138,9 +140,18 @@ export async function sendNotification(notificationData: NotificationData) {
       customData: notificationData.customData || {}
     }
 
+    // Convert database subscription to web-push format
+    const pushSubscription = {
+      endpoint: subscription.endpoint,
+      keys: {
+        p256dh: subscription.p256dh!,
+        auth: subscription.auth!
+      }
+    }
+
     // Send notification
     await webpush.sendNotification(
-      mockSubscription as any,
+      pushSubscription,
       JSON.stringify(payload)
     )
 

@@ -42,7 +42,7 @@ export default function PwaTestButton() {
           const response = await fetch(manifestLink.getAttribute('href')!)
           const manifest = await response.json()
           results.push(`✅ Manifest loaded: ${manifest.name}`)
-        } catch (error) {
+        } catch {
           results.push('❌ Failed to load manifest')
         }
       } else {
